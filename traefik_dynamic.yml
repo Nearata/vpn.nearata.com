@@ -14,9 +14,9 @@ tls:
         - CurveP521
         - CurveP384
       #sniStrict: true
-  # https://developers.cloudflare.com/ssl/origin-configuration/origin-ca/
-  stores:
-    default:
-      defaultCertificate:
-        certFile: localhost+1.pem
-        keyFile: localhost+1-key.pem
+  # https://github.com/acmesh-official/acme.sh
+#  stores:
+#    default:
+#      defaultCertificate:
+#        certFile: certificate.pem
+#        keyFile: certificate-key.pem

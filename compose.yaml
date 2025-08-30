@@ -8,16 +8,6 @@
 # database or a cache. For examples, see the Awesome Compose repository:
 # https://github.com/docker/awesome-compose
 services:
-  #whoami:
-  #  image: traefik/whoami:latest
-  #  networks:
-  #    - proxy
-  #  labels:
-  #    - traefik.enable=true
-  #    - traefik.http.routers.whoami.rule=Host(`whoami.localhost`)
-  #    - traefik.http.services.whoami.loadbalancer.server.port=80
-  #    - traefik.http.routers.mydashboard.middlewares=myauth
-  #    - traefik.http.middlewares.myauth.basicauth.users=admin:$$2y$$12$$eg1aOPa9ukKEyo2K.7ZvLeZh7tLUTpV/V88il8.Pzr00hQPr4JYLO
   traefik:
     image: traefik:v3.5
     restart: always
@@ -28,8 +18,8 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       #- ./traefik.yml:/traefik.yml:ro
       - ./traefik_dynamic.yml:/traefik_dynamic.yml:ro
-      - ./localhost+1.pem:/localhost+1.pem:ro
-      - ./localhost+1-key.pem:/localhost+1-key.pem:ro
+      - ./certificate.pem:/certificate.pem:ro
+      - ./certificate-key.pem:/certificate-key.pem:ro
     command:
       #- --api.dashboard=true
       - --providers.docker=true
@@ -61,7 +51,6 @@ services:
       - /lib/modules:/lib/modules:ro
     ports:
       - "51820:51820/udp"
-      #- "51821:51821/tcp"
     restart: always
     cap_add:
       - NET_ADMIN
@@ -75,8 +64,6 @@ services:
     labels:
       - traefik.enable=true
       - traefik.http.routers.wireguard.rule=Host(`wireguard.localhost`) || Host(`vpn.nearata.com`)
-      #- traefik.http.routers.wireguard.entrypoints=websecure
-      #- traefik.http.routers.wireguard.service=wireguard
       - traefik.http.services.wireguard.loadbalancer.server.port=51821
       - traefik.http.routers.wireguard.middlewares=myauth
       - traefik.http.middlewares.myauth.basicauth.users=admin:$$2y$$12$$eg1aOPa9ukKEyo2K.7ZvLeZh7tLUTpV/V88il8.Pzr00hQPr4JYLO
