@@ -18,12 +18,13 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock
       #- ./traefik.yml:/traefik.yml:ro
       - ./traefik_dynamic.yml:/traefik_dynamic.yml:ro
-      - ./certificate.pem:/certificate.pem:ro
-      - ./certificate-key.pem:/certificate-key.pem:ro
+      - ./fullchain.cer:/certificate.pem:ro
+      - ./vpn.nearata.com.key:/certificate-key.pem:ro
     command:
       #- --api.dashboard=true
       - --providers.docker=true
-      - --providers.docker.network=proxy
+      #- --providers.docker.network=proxy
+      - --providers.docker.network=wireguard
       - --providers.file.filename=/traefik_dynamic.yml
       - --entrypoints.web.http.redirections.entrypoint.to=websecure
       - --entryPoints.web.http.redirections.entrypoint.scheme=https
@@ -32,7 +33,8 @@ services:
       - --entrypoints.websecure.http.tls=true
       - --entrypoints.websecure.http.tls.options=default
     networks:
-      - proxy
+      #- proxy
+      - wireguard
     labels:
       - traefik.enable=true
       #- traefik.http.routers.mydashboard.rule=Host(`traefik.localhost`)
@@ -45,7 +47,7 @@ services:
       wireguard:
         ipv4_address: 10.42.42.42
         ipv6_address: fdcc:ad94:bacf:61a3::2a
-      proxy:
+      #proxy:
     volumes:
       - etc_wireguard:/etc/wireguard
       - /lib/modules:/lib/modules:ro
@@ -67,17 +69,17 @@ services:
       - traefik.http.services.wireguard.loadbalancer.server.port=51821
       - traefik.http.routers.wireguard.middlewares=myauth
       - traefik.http.middlewares.myauth.basicauth.users=admin:$$2y$$12$$eg1aOPa9ukKEyo2K.7ZvLeZh7tLUTpV/V88il8.Pzr00hQPr4JYLO
-    environment:
+    #environment:
       # https://wg-easy.github.io/wg-easy/latest/advanced/config/optional-config/
-      - DISABLE_IPV6=true
+      #- DISABLE_IPV6=true
 
 networks:
-  proxy:
+  #proxy:
   wireguard:
-    driver: bridge
-    enable_ipv6: false
+    #driver: bridge
+    enable_ipv6: true
     ipam:
-      driver: default
+      #driver: default
       config:
         - subnet: 10.42.42.0/24
         - subnet: fdcc:ad94:bacf:61a3::/64
