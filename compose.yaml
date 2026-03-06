@@ -9,17 +9,15 @@
 # https://github.com/docker/awesome-compose
 services:
   traefik:
-    image: traefik:v3.5
+    image: traefik:v3.6
     restart: always
     ports:
       - 80:80
       - 443:443
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
+      - /var/run/docker.sock:/var/run/docker.sock:ro
       #- ./traefik.yml:/traefik.yml:ro
       - ./traefik_dynamic.yml:/traefik_dynamic.yml:ro
-      - ./fullchain.cer:/certificate.cer:ro
-      - ./vpn.nearata.com.key:/certificate.key:ro
     command:
       #- --api.dashboard=true
       - --providers.docker=true
@@ -30,7 +28,10 @@ services:
       - --entrypoints.websecure.address=:443
       - --entrypoints.web.address=:80
       - --entrypoints.websecure.http.tls=true
-      - --entrypoints.websecure.http.tls.options=default
+      - --certificatesresolvers.myresolver.acme.email=youremail@domain.tld
+      - --certificatesresolvers.myresolver.acme.storage=/acme.json
+      - --certificatesresolvers.myresolver.acme.httpchallenge=true
+      - --certificatesresolvers.myresolver.acme.httpchallenge.entrypoint=web
     networks:
       - wireguard
     labels:
@@ -62,10 +63,11 @@ services:
       - net.ipv6.conf.default.forwarding=1
     labels:
       - traefik.enable=true
-      - traefik.http.routers.wireguard.rule=Host(`wireguard.localhost`) || Host(`vpn.nearata.com`)
+      - traefik.http.routers.wireguard.rule=Host(`vpn.nearata.com`)
       - traefik.http.services.wireguard.loadbalancer.server.port=51821
       - traefik.http.routers.wireguard.middlewares=myauth
       - traefik.http.middlewares.myauth.basicauth.users=admin:$$2y$$12$$eg1aOPa9ukKEyo2K.7ZvLeZh7tLUTpV/V88il8.Pzr00hQPr4JYLO
+      - traefik.http.routers.wireguard.tls.certresolver=myresolver
 
 networks:
   wireguard:

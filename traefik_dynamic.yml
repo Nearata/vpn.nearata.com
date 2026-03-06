@@ -14,9 +14,3 @@ tls:
         - CurveP521
         - CurveP384
       #sniStrict: true
-  # https://github.com/acmesh-official/acme.sh
-  stores:
-    default:
-      defaultCertificate:
-        certFile: certificate.cer
-        keyFile: certificate.key
