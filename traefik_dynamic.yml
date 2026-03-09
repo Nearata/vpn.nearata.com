@@ -14,3 +14,9 @@ tls:
         - CurveP521
         - CurveP384
       #sniStrict: true
+  # mkcert
+  # stores:
+  #  default:
+  #    defaultCertificate:
+  #      certFile: certificate.cer
+  #      keyFile: certificate.key
