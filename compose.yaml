@@ -28,6 +28,7 @@ services:
       - --entrypoints.websecure.address=:443
       - --entrypoints.web.address=:80
       - --entrypoints.websecure.http.tls=true
+      # - --entrypoints.websecure.http.tls.options=default
       - --certificatesresolvers.myresolver.acme.email=youremail@domain.tld
       - --certificatesresolvers.myresolver.acme.storage=/acme.json
       - --certificatesresolvers.myresolver.acme.httpchallenge=true
