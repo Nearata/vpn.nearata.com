@@ -16,7 +16,7 @@ services:
       - 443:443
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
-      #- ./traefik.yml:/traefik.yml:ro
+      # - ./traefik.yml:/traefik.yml:ro
       - ./traefik_dynamic.yml:/traefik_dynamic.yml:ro
     command:
       #- --api.dashboard=true
@@ -38,10 +38,10 @@ services:
       - wireguard
     labels:
       - traefik.enable=true
-      #- traefik.http.routers.mydashboard.rule=Host(`traefik.localhost`)
-      #- traefik.http.routers.mydashboard.service=api@internal
-      #- traefik.http.routers.mydashboard.middlewares=myauth
-      #- traefik.http.middlewares.myauth.basicauth.users=admin:$$2y$$12$$eg1aOPa9ukKEyo2K.7ZvLeZh7tLUTpV/V88il8.Pzr00hQPr4JYLO
+      # - traefik.http.routers.mydashboard.rule=Host(`traefik.localhost`)
+      # - traefik.http.routers.mydashboard.service=api@internal
+      # - traefik.http.routers.mydashboard.middlewares=myauth
+      # - traefik.http.middlewares.myauth.basicauth.users=admin:$$2y$$12$$eg1aOPa9ukKEyo2K.7ZvLeZh7tLUTpV/V88il8.Pzr00hQPr4JYLO
   wireguard:
     image: ghcr.io/wg-easy/wg-easy:15
     networks:
@@ -80,10 +80,10 @@ services:
 
 networks:
   wireguard:
-    #driver: bridge
+    # driver: bridge
     enable_ipv6: true
     ipam:
-      #driver: default
+      # driver: default
       config:
         - subnet: 10.42.42.0/24
         - subnet: fdcc:ad94:bacf:61a3::/64
