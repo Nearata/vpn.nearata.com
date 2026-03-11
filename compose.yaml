@@ -19,7 +19,7 @@ services:
       # - ./traefik.yml:/traefik.yml:ro
       - ./traefik_dynamic.yml:/traefik_dynamic.yml:ro
     command:
-      #- --api.dashboard=true
+      # - --api.dashboard=true
       - --providers.docker=true
       - --providers.docker.network=wireguard
       - --providers.file.filename=/traefik_dynamic.yml
