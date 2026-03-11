@@ -23,12 +23,13 @@ services:
       - --providers.docker=true
       - --providers.docker.network=wireguard
       - --providers.file.filename=/traefik_dynamic.yml
+      - --entrypoints.web.address=:80
+      # mkcert
+      # - --entrypoints.websecure.http.tls.options=default
       - --entrypoints.web.http.redirections.entrypoint.to=websecure
       - --entryPoints.web.http.redirections.entrypoint.scheme=https
       - --entrypoints.websecure.address=:443
-      - --entrypoints.web.address=:80
       - --entrypoints.websecure.http.tls=true
-      # - --entrypoints.websecure.http.tls.options=default
       - --certificatesresolvers.myresolver.acme.email=youremail@domain.tld
       - --certificatesresolvers.myresolver.acme.storage=/acme.json
       - --certificatesresolvers.myresolver.acme.httpchallenge=true
@@ -66,9 +67,16 @@ services:
       - traefik.enable=true
       - traefik.http.routers.wireguard.rule=Host(`vpn.nearata.com`)
       - traefik.http.services.wireguard.loadbalancer.server.port=51821
-      - traefik.http.routers.wireguard.middlewares=myauth
-      - traefik.http.middlewares.myauth.basicauth.users=admin:$$2y$$12$$eg1aOPa9ukKEyo2K.7ZvLeZh7tLUTpV/V88il8.Pzr00hQPr4JYLO
-      - traefik.http.routers.wireguard.tls.certresolver=myresolver
+      # - traefik.http.routers.wireguard.tls.certresolver=myresolver
+    environment:
+      # https://wg-easy.github.io/wg-easy/v15.2/advanced/config/unattended-setup/
+      # INIT_PASSWORD >=12
+      - INIT_ENABLED=true
+      # remove creds after first start
+      - INIT_USERNAME=admin
+      - INIT_PASSWORD=admin
+      - INIT_HOST=vpn.nearata.com
+      - INIT_PORT=51820
 
 networks:
   wireguard:
